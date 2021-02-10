@@ -4,7 +4,7 @@ import (
     "bufio"
     "context"
     "crypto/tls"
-    pb "github.com/DGHeroin/xRPC/proto"
+    "github.com/DGHeroin/xRPC/protocol"
     "net"
     "sync"
     "time"
@@ -93,11 +93,11 @@ func (s *server) handleConn(conn net.Conn) {
 }
 
 func (s *server) readRequest(ctx context.Context, r *bufio.Reader) (interface{}, error) {
-    msg, err := pb.Read(r)
+    msg, err := protocol.Read(r)
     if err != nil {
         return nil, err
     }
-    m := &MessagePayload{Payload: msg.Payload()}
+    m := &MessagePayload{Payload: msg.GetPayload()}
     if err := s.plugins.DoBeforeEncode(m); err != nil {
         return nil, err
     }

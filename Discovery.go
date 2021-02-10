@@ -1,6 +1,8 @@
 package xRPC
 
-type Discovery interface{}
+type Discovery interface{
+    GetConnection() Connection
+}
 type DiscoveryOption struct {
     server string
 }

@@ -1,13 +1,15 @@
-package pb
+package protocol
 
 import (
     "fmt"
+    "github.com/DGHeroin/xRPC/codec"
     "io"
 )
 
 type Message struct {
     *Header
-    payload []byte
+    Method  string
+    Payload []byte
 }
 
 const (
@@ -58,13 +60,22 @@ func (m *Message) Decode(r io.Reader) error {
     // read body
     sz := m.Header.BodyLength()
     if sz > 0 {
-        m.payload = make([]byte, sz)
-        if _, err := io.ReadFull(r, m.payload); err != nil {
+        m.Payload = make([]byte, sz)
+        if _, err := io.ReadFull(r, m.Payload); err != nil {
             return err
         }
     }
     return nil
 }
-func (m *Message) Payload() []byte {
-    return m.payload
+func (m *Message) GetPayload() []byte {
+    return m.Payload
+}
+
+func (m *Message) Reset() {
+    resetHeader(m.Header)
+    m.Method = ""
+    m.Payload = nil
+}
+func (m *Message) Encode(codec codec.Codec) ([]byte,error) {
+    return codec.Encode(m)
 }

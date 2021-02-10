@@ -1,4 +1,4 @@
-package pb
+package protocol
 
 import "encoding/binary"
 
@@ -17,6 +17,13 @@ const (
 // [8-12] size
 
 type Header [12]byte
+
+var zeroHeaderArray Header
+var zeroHeader = zeroHeaderArray[1:]
+
+func resetHeader(h *Header) {
+    copy(h[1:], zeroHeader)
+}
 
 func (h Header) CheckMagicNumber() bool {
     return h[0] == magicNumber
