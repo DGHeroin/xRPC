@@ -11,4 +11,5 @@ func main()  {
     client := xRPC.NewClient(dis)
     client.Call(context.Background(), "serviceName", "method", nil, nil)
     log.Println(dis)
+
 }
